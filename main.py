@@ -1,12 +1,5 @@
 import numpy as np
 
-#a and b must both be n-dim vectors
-def dot(a,b):
-    s = 0
-    for i in range(len(a)):
-        s += a[i]*b[i]
-    return s
-
 # input: set of any number of nx1 vectors
 # returns yes and prints the scalar product if the vectors are equiangular, returns no if not
 def equiangular(a):
@@ -19,67 +12,69 @@ def equiangular(a):
                 print(dot(a[i], a[j]))
                 print("not equiangular")
                 return False
-            print("vectors " + str(i) + ", " + str(j) + ": " + str(round(np.abs(dot(a[i],a[j])),5)))
+            print("vectors " + str(i) + ", " + str(j) + ": " + str(round(np.abs(dot(a[i], a[j])), 5)))
 
     print("yes equiangular")
 
+# input: set of vectors
+def identity_resolution(a):
+    mat = np.asmatrix(a)
+    return np.matmul(mat.getH(), mat).round(4)
+
+# input: generator of the group (r), and a fiducial vector (fid)
+def set_generator(r, fid):
+    v1 = fid
+    set = [v1]
+    while not (np.matmul(r, fid).round(8) == v1.round(8)).all():
+        new_vec = np.matmul(r, fid)
+        set.append(new_vec)
+        fid = new_vec
+
+    return set
+
 # test of equiangular lines
-# a = ((1,0,0),(0,1,0),(0,0,1)) # orthoggonal basis in d=3
+'''a = ((1,0,0),(0,1,0),(0,0,1)) # orthoggonal basis in d=3
 # a = ((1,0),(0.5, np.sqrt(3)/2),(-0.5, np.sqrt(3)/2)) # set of equiangular lines in d=2
 
 # corners of the icosahedron, maximal equiangular lines in d=3
 # p = 0.5*(1 + np.sqrt(5))
 
 # a = ((0, 1, p), (0, 1, -1 * p), (-1, p, 0), (-1, -p, 0), (p, 0, 1), (-1 * p, 0, 1))
-# equiangular(a)
+# equiangular(a)'''
 
-a = 1/2
-b = np.sqrt(3)/2
+# 5 lines in R4:
+a = (-1+np.sqrt(5))/4
+b = np.sqrt((5+np.sqrt(5))/8)
+c = -(1+np.sqrt(5))/4
+d = np.sqrt((5-np.sqrt(5))/8)
+r5_generator = np.array([[a, -1*b, 0, 0],
+               [b, a, 0, 0],
+               [0, 0, c, -1*d],
+               [0, 0, d, c]])
+r5_fid = np.array([1, 0, 1, 0])/np.sqrt(2)
 
-u1 = np.array([1,0,-1, 0])/np.sqrt(3)
-u2 = np.array([a, b, -1, 0])/np.sqrt(3)
-u3 = np.array([-1*a, b, -1, 0])/np.sqrt(3)
-u4 = np.array([-1,0,-1*a,-1*b])/np.sqrt(3)
-u5 = np.array([-1*a,-1*b,-1*a,-1*b])/np.sqrt(3)
-u6 = np.array([-1*a,b,-1*a,-1*b])/np.sqrt(3)
-u7 = np.array([1,0,a,-1*b])/np.sqrt(3)
-u8 = np.array([a,b,-1*a,-1*b])/np.sqrt(3)
-u9 = np.array([-1*a,b,a,-1*b])/np.sqrt(3)
+# 7 lines in R6:
 
-set = [u1,u2,u3,u4,u5,u6,u7,u8,u9]
+p = np.cos(2*np.pi/7)
+q = np.sin(2*np.pi/7)
+r = np.cos(4*np.pi/7)
+s = np.sin(4*np.pi/7)
+t = np.cos(6*np.pi/7)
+u = np.sin(6*np.pi/7)
+
+set = set_generator(r5_generator, r5_fid)
 # check that the u_i are normal vectors
 
-print("magnitude of vectors u1-u9:")
+print("magnitude of vectors:")
 for i in set:
-    print("{:.2f}".format(dot(i,i)))
+    print("{:.2f}".format(np.matmul(i, i)))
 
 
 # check that they satisfy equiangular condition
 print("overlap of all pairs of lines")
 for i in range(len(set)):
-    for j in range(i+1,len(set)):
-        print("{:.2f}".format(dot(set[i], set[j])))
+    for j in range(i+1, len(set)):
+        print("{:.2f}".format(np.matmul(set[i], set[j])))
 
-'''        
-
-# check that the lines resolve the identity
-print("synthesis operator: (should be a multiple of the identity)")
-s = np.transpose(np.array([u1, u2, u3, u4, u5]))
-sc = np.transpose(s)
-print(s)
-print(np.matmul(s,sc))
-
-
-# unitary matrices producing the maximally entangled states (matrices 3 and 5 need to be switched. check the states)
-mat1 = np.asmatrix(np.array([[1j, -1j], [1j, 1j]])/np.sqrt(2))
-mat2 = np.asmatrix(np.array([[d+a*1j, b-c*1j],[b+c*1j, -1*d+a*1j]])/np.sqrt(2))
-mat3 = np.asmatrix(np.array([[-1*b+c*1j, d-a*1j], [d+a*1j, b+c*1j]])/np.sqrt(2))
-mat4 = np.asmatrix(np.array([[b+c*1j, -1*d-a*1j], [-1*d+a*1j, -1*b+c*1j]])/np.sqrt(2))
-mat5 = np.asmatrix(np.array([[-1*d+a*1j, -1*b-c*1j], [-1*b+c*1j, d+a*1j]])/np.sqrt(2))
-# checks that the matrices really are unitary matrices
-print("check that the matrices are unitary matrices")
-print(np.matmul(mat1.getH(), mat1))
-print(np.matmul(mat2.getH(), mat2))
-print(np.matmul(mat3.getH(), mat3))
-print(np.matmul(mat4.getH(), mat4))
-print(np.matmul(mat5.getH(), mat5))'''
+# check that they resolve the identity
+print(identity_resolution(set))
