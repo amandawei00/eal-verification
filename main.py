@@ -25,6 +25,7 @@ def identity_resolution(a):
 def set_generator(r, fid):
     v1 = fid
     set = [v1]
+    # condition that the application of g doesn't complete the cycle
     while not (np.matmul(r, fid).round(8) == v1.round(8)).all():
         new_vec = np.matmul(r, fid)
         set.append(new_vec)
@@ -34,7 +35,7 @@ def set_generator(r, fid):
 
 # returns set of tuples, coordinates of roots of unity coord. on unit circle
 def nth_roots(n):
-    return 0
+    return 0 #(not done)
 # test of equiangular lines
 '''a = ((1,0,0),(0,1,0),(0,0,1)) # orthoggonal basis in d=3
 # a = ((1,0),(0.5, np.sqrt(3)/2),(-0.5, np.sqrt(3)/2)) # set of equiangular lines in d=2
@@ -108,8 +109,7 @@ r17_generator = np.array([[ax,-1*ay,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
                           [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,hy,hx]])
 r17_fid = np.array([1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0])/np.sqrt(8)
 
-set = set_generator(r17_generator, r17_fid)
-
+set = set_generator(r7_generator, r7_fid)
 
 # check that the u_i are normal vectors
 
@@ -122,7 +122,7 @@ for i in set:
 print("overlap of all pairs of lines")
 for i in range(len(set)):
     for j in range(i+1, len(set)):
-        print("{:.4f}".format(np.matmul(set[i], set[j])))
+        print("("+str(i)+","+str(j)+"): "+"{:.4f}".format(np.matmul(set[i], set[j])))
 
 # check that they resolve the identity
 print(identity_resolution(set))
