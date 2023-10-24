@@ -33,10 +33,7 @@ def set_generator(r, fid):
 
     return set
 
-# returns set of tuples, coordinates of roots of unity coord. on unit circle
-def nth_roots(n):
-    return 0 #(not done)
-# test of equiangular lines
+# test of equiangular method
 '''a = ((1,0,0),(0,1,0),(0,0,1)) # orthoggonal basis in d=3
 # a = ((1,0),(0.5, np.sqrt(3)/2),(-0.5, np.sqrt(3)/2)) # set of equiangular lines in d=2
 
