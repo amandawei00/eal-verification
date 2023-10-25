@@ -1,4 +1,6 @@
 import numpy as np
+from qutip import *
+import matplotlib.pyplot as plt
 
 # 5th roots of unity values
 a = (-1+np.sqrt(5))/4
@@ -96,8 +98,17 @@ goset = [go12, go13, go14, go15, go16,
          go41, go42, go43, go45, go46,
          go51, go52, go53, go54, go56,
          go61, go62, go63, go64, go65]
-
-print(closed_under_mult(goset))
+'''
+print("g12 = ")
+print(go12)
+print("g13 = ")
+print(go13)
+print("g14 = ")
+print(go14)
+print("g15 = ")
+print(go15)
+print("g16 = ")
+print(go16)'''
 # 5 lines in R4
 u1 = np.array([[1.j,-1.j],[1.j,1.j]])/np.sqrt(2)
 u2 = np.array([[d+a*1.j, b-1.j*c],[b+1.j*c,-1*d+1.j*a]])/np.sqrt(2)
@@ -144,3 +155,17 @@ v2 = np.matmul(u2, u1_inv)
 v3 = np.matmul(u3, u1_inv)
 v4 = np.matmul(u4, u1_inv)
 v5 = np.matmul(u5, u1_inv)
+
+bloch1 = np.array([0,0,0])
+bloch2 = np.array([-b-d, a-c, b-d])/np.sqrt((-b-d)*(-b-d)+(a-c)*(a-c)+(b-d)*(b-d))
+bloch3 = np.array([b+d, a-c, a+c])/np.sqrt((b+d)*(b+d)+(a-c)*(a-c)+(a+c)*(a+c))
+bloch4 = np.array([-b+d, -a+c, -b-d])/np.sqrt((-b+d)*(-b+d)+(-a+c)*(-a+c)+(-b-d)*(-b-d))
+bloch5 = np.array([b-d, -a+c, b+d])/np.sqrt((b-d)*(b-d)+(-a+c)*(-a+c)+(b+d)*(b+d))
+
+bloch_set = [bloch1, bloch2, bloch3, bloch4, bloch5]
+
+b = qutip.Bloch()
+b.make_sphere()
+b.add_points(bloch2)
+b.render()
+b.show()
