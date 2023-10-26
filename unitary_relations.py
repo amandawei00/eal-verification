@@ -1,6 +1,7 @@
 import numpy as np
 from qutip import *
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # 5th roots of unity values
 a = (-1+np.sqrt(5))/4
@@ -116,6 +117,14 @@ u3 = np.array([[-1*d+a*1.j,-b-1.j*c],[-b+1.j*c,d+a*1.j]])/np.sqrt(2)
 u4 = np. array([[b+c*1.j,-d-a*1.j],[-d+a*1.j,-b+c*1.j]])/np.sqrt(2)
 u5 = np.array([[-b+c*1.j,d-a*1.j],[d+a*1.j, b+c*1.j]])/np.sqrt(2)
 
+bloch1 = np.array([0, 1, 0])
+bloch2 = np.array([b,c,d])/np.sqrt(b*b+c*c+d*d)
+bloch3 = np.array([-b,c,-d])/np.sqrt(b*b+c*c+d*d)
+bloch4 = np.array([-d,a,b])/np.sqrt(b*b+a*a+d*d)
+bloch5 = np.array([d,a,-b])/np.sqrt(b*b+a*a+d*d)
+
+bloch_set = [bloch1, bloch2, bloch3, bloch4, bloch5]
+
 u1_inv = np.array([[-1.j, -1.j], [1.j, -1.j]])/np.sqrt(2)
 u2_inv = np.array([[d-a*1.j,b-c*1.j],[b+c*1.j,-a*1.j-d]])/np.sqrt(2)
 u3_inv = np.array([[-d-a*1.j,-b-c*1.j],[-b+c*1.j,d-a*1.j]])/np.sqrt(2)
@@ -156,16 +165,17 @@ v3 = np.matmul(u3, u1_inv)
 v4 = np.matmul(u4, u1_inv)
 v5 = np.matmul(u5, u1_inv)
 
-bloch1 = np.array([0,0,0])
-bloch2 = np.array([-b-d, a-c, b-d])/np.sqrt((-b-d)*(-b-d)+(a-c)*(a-c)+(b-d)*(b-d))
-bloch3 = np.array([b+d, a-c, a+c])/np.sqrt((b+d)*(b+d)+(a-c)*(a-c)+(a+c)*(a+c))
-bloch4 = np.array([-b+d, -a+c, -b-d])/np.sqrt((-b+d)*(-b+d)+(-a+c)*(-a+c)+(-b-d)*(-b-d))
-bloch5 = np.array([b-d, -a+c, b+d])/np.sqrt((b-d)*(b-d)+(-a+c)*(-a+c)+(b+d)*(b+d))
+shifted_bloch1 = np.array([0,0,0])
+shifted_bloch2 = np.array([-b-d, a-c, b-d])/np.sqrt((-b-d)*(-b-d)+(a-c)*(a-c)+(b-d)*(b-d))
+shifted_bloch3 = np.array([b+d, a-c, a+c])/np.sqrt((b+d)*(b+d)+(a-c)*(a-c)+(a+c)*(a+c))
+shifted_bloch4 = np.array([-b+d, -a+c, -b-d])/np.sqrt((-b+d)*(-b+d)+(-a+c)*(-a+c)+(-b-d)*(-b-d))
+shifted_bloch5 = np.array([b-d, -a+c, b+d])/np.sqrt((b-d)*(b-d)+(-a+c)*(-a+c)+(b+d)*(b+d))
 
-bloch_set = [bloch1, bloch2, bloch3, bloch4, bloch5]
+shifted_bloch_set = [shifted_bloch1, shifted_bloch2, shifted_bloch3, shifted_bloch4, shifted_bloch5]
+
 
 b = qutip.Bloch()
 b.make_sphere()
-b.add_points(bloch2)
+b.add_vectors(shifted_bloch_set)
 b.render()
-b.show()
+plt.show()
