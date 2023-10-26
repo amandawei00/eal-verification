@@ -36,7 +36,7 @@ def closed_under_mult(set):
                 return False
     return True
 
-# 6 lines in R4 --------------------------------------------------------------------------
+# 6 lines in R4 --------------------------------------------------------------------------------------------------------
 # unitaries:
 p = 0.5*(1+np.sqrt(5))
 norm = np.sqrt(1+p*p)
@@ -48,6 +48,14 @@ o4 = (1/norm)*np.array([[-1.j, -p], [-p, -1.j]])
 o5 = (1/norm)*np.array([[1.j*p, -1.j], [1.j, 1.j*p]])
 o6 = (1/norm)*np.array([[-1.j*p, -1.j], [1.j, -1.j*p]])
 oset = [o1, o2, o3, o4, o5, o6]
+
+obloch1 = np.array([1,p,0])/norm
+obloch2 = np.array([1,-p,0])/norm
+obloch3 = np.array([1,0,0])
+obloch4 = np.array([-1,0,0])
+obloch5 = np.array([0,1,0])
+obloch6 = np.array([0,1,0])
+obloch_set = [obloch1, obloch2, obloch3, obloch4, obloch5, obloch6]
 
 o1_inv = np.linalg.inv(o1)
 o2_inv = np.linalg.inv(o2)
@@ -110,7 +118,7 @@ print("g15 = ")
 print(go15)
 print("g16 = ")
 print(go16)'''
-# 5 lines in R4
+# 5 lines in R4---------------------------------------------------------------------------------------------------------
 u1 = np.array([[1.j,-1.j],[1.j,1.j]])/np.sqrt(2)
 u2 = np.array([[d+a*1.j, b-1.j*c],[b+1.j*c,-1*d+1.j*a]])/np.sqrt(2)
 u3 = np.array([[-1*d+a*1.j,-b-1.j*c],[-b+1.j*c,d+a*1.j]])/np.sqrt(2)
@@ -158,7 +166,7 @@ print("G35 = ", g35)
 
 print("G45 = ", g45)
 '''
-# shifted bases-------------------------------------------------------------------
+# shifted bases---------------------------------------------------------------------------------------------------------
 v1 = np.matmul(u1, u1_inv)
 v2 = np.matmul(u2, u1_inv)
 v3 = np.matmul(u3, u1_inv)
@@ -176,6 +184,6 @@ shifted_bloch_set = [shifted_bloch1, shifted_bloch2, shifted_bloch3, shifted_blo
 
 b = qutip.Bloch()
 b.make_sphere()
-b.add_vectors(shifted_bloch_set)
+b.add_vectors(obloch_set)
 b.render()
 plt.show()
