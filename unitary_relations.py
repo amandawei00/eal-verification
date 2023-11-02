@@ -36,6 +36,9 @@ def closed_under_mult(set):
                 return False
     return True
 
+def dist(vec):
+    return np.sqrt(np.matmul(vec,vec))
+
 # 6 lines in R4 --------------------------------------------------------------------------------------------------------
 # unitaries:
 p = 0.5*(1+np.sqrt(5))
@@ -119,11 +122,11 @@ print(go15)
 print("g16 = ")
 print(go16)'''
 # 5 lines in R4---------------------------------------------------------------------------------------------------------
-u1 = np.array([[1.j,-1.j],[1.j,1.j]])/np.sqrt(2)
-u2 = np.array([[d+a*1.j, b-1.j*c],[b+1.j*c,-1*d+1.j*a]])/np.sqrt(2)
-u3 = np.array([[-1*d+a*1.j,-b-1.j*c],[-b+1.j*c,d+a*1.j]])/np.sqrt(2)
-u4 = np. array([[b+c*1.j,-d-a*1.j],[-d+a*1.j,-b+c*1.j]])/np.sqrt(2)
-u5 = np.array([[-b+c*1.j,d-a*1.j],[d+a*1.j, b+c*1.j]])/np.sqrt(2)
+u1 = np.array([[1.j, -1.j], [1.j, 1.j]])/np.sqrt(2)
+u2 = np.array([[d+a*1.j, b-1.j*c], [b+1.j*c, -1*d+1.j*a]])/np.sqrt(2)
+u3 = np.array([[-1*d+a*1.j, -b-1.j*c], [-b+1.j*c, d+a*1.j]])/np.sqrt(2)
+u4 = np. array([[b+c*1.j, -d-a*1.j], [-d+a*1.j, -b+c*1.j]])/np.sqrt(2)
+u5 = np.array([[-b+c*1.j, d-a*1.j], [d+a*1.j, b+c*1.j]])/np.sqrt(2)
 
 bloch1 = np.array([0, 1, 0])
 bloch2 = np.array([b,c,d])/np.sqrt(b*b+c*c+d*d)
@@ -173,17 +176,54 @@ v3 = np.matmul(u3, u1_inv)
 v4 = np.matmul(u4, u1_inv)
 v5 = np.matmul(u5, u1_inv)
 
-shifted_bloch1 = np.array([0,0,0])
-shifted_bloch2 = np.array([-b-d, a-c, b-d])/np.sqrt((-b-d)*(-b-d)+(a-c)*(a-c)+(b-d)*(b-d))
-shifted_bloch3 = np.array([b+d, a-c, a+c])/np.sqrt((b+d)*(b+d)+(a-c)*(a-c)+(a+c)*(a+c))
+shifted_bloch1 = np.array([0, 0, 0])
+shifted_bloch2 = np.array([-b-d, a-c, b-d])/np.sqrt((b+d)*(b+d)+(a-c)*(a-c)+(b-d)*(b-d))
+shifted_bloch3 = np.array([b+d, a-c, -b+d])/np.sqrt((b+d)*(b+d)+(a-c)*(a-c)+(-b+d)*(-b+d))
 shifted_bloch4 = np.array([-b+d, -a+c, -b-d])/np.sqrt((-b+d)*(-b+d)+(-a+c)*(-a+c)+(-b-d)*(-b-d))
 shifted_bloch5 = np.array([b-d, -a+c, b+d])/np.sqrt((b-d)*(b-d)+(-a+c)*(-a+c)+(b+d)*(b+d))
 
 shifted_bloch_set = [shifted_bloch1, shifted_bloch2, shifted_bloch3, shifted_bloch4, shifted_bloch5]
 
+# qutrit-10 states -----------------------------------------------------------------------------------------------------
+t = np.arccos(-1/13)
+trit0 = np.array([[1,0,0],[0,1,0],[0,0,1]])
+trit1= np.array([[np.cos(t),-1.j*np.sin(t),0],[-1.j*np.sin(t),np.cos(t),0],[0,0,np.cos(t)]])
+trit2 = np.array([[np.cos(t), np.sin(t)*(3/4)*(1.j*(1/6)-np.sqrt(7/4)),0],[np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(7/4)), np.cos(t) ,0],[0, 0, np.cos(t)]])
+trit3 = np.array([[np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(12/7), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)),0],[np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)),np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(12/7),0],[0,0,np.cos(t)]])
+trit4 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), -1.j*np.sin(t)*(3/4)*np.sqrt(5/3)],
+                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(1/21), 0],
+                  [-1.j*np.sin(t)*(3/4)*np.sqrt(5/3),0,np.cos(t)]])
+trit5 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)-2*np.sqrt(2/5))],
+                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(1/21), 0],
+                  [1.j*np.sin(t)*(3/4)*(np.sqrt(1/15)-2*np.sqrt(2/5)*1.j), 0, np.cos(t)]])
+trit6 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)+np.sqrt(1/10))],
+                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(1/21), -1.j*np.sin(t)*(3/4)*np.sqrt(3/2)],
+                  [1.j*np.sin(t)*(3/4)*(np.sqrt(1/15)+1.j*np.sqrt(1/10)), -1.j*np.sin(t)*(3/4)*np.sqrt(3/2), np.cos(t)]])
+trit7 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)+np.sqrt(1/10))],
+                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j-2*np.sqrt(1/3))],
+                  [np.sin(t)*(3/4)*(np.sqrt(1/15)*1.j-np.sqrt(1/10)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j+2*np.sqrt(1/3)), np.cos(t)]])
+trit8 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*(np.sqrt(1/21)+np.sqrt(1/3)), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)+np.sqrt(1/10))],
+                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)+1.j*np.sin(t)*(3/4)*(-np.sqrt(1/21)+np.sqrt(1/3)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j+np.sqrt(1/3))],
+                  [np.sin(t)*(3/4)*(np.sqrt(1/15)*1.j-np.sqrt(1/10)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j-np.sqrt(1/3)), np.cos(t)-1.j*np.sin(t)*(3/4)*2/np.sqrt(3)]])
+trit9 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*(np.sqrt(1/21)-np.sqrt(1/3)), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)+np.sqrt(1/10))],
+                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)+1.j*np.sin(t)*(3/4)*(-np.sqrt(1/21)-np.sqrt(1/3)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j+np.sqrt(1/3))],
+                  [np.sin(t)*(3/4)*(np.sqrt(1/15)*1.j-np.sqrt(1/10)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j-np.sqrt(1/3)), np.cos(t)+1.j*np.sin(t)*(3/4)*2/np.sqrt(3)]])
 
-b = qutip.Bloch()
-b.make_sphere()
-b.add_vectors(obloch_set)
-b.render()
-plt.show()
+print(np.trace(np.matmul(np.asmatrix(trit4).getH(),trit1)))
+print(np.trace(np.matmul(np.asmatrix(trit4).getH(),trit2)))
+print(np.trace(np.matmul(np.asmatrix(trit4).getH(),trit3)))
+print(np.trace(np.matmul(np.asmatrix(trit4).getH(),trit5)))
+print(np.trace(np.matmul(np.asmatrix(trit4).getH(),trit6)))
+print(np.trace(np.matmul(np.asmatrix(trit4).getH(),trit7)))
+print(np.trace(np.matmul(np.asmatrix(trit4).getH(),trit8)))
+print(np.trace(np.matmul(np.asmatrix(trit4).getH(),trit9)))
+
+alpha = 3*np.cos(t)*np.cos(t)-0.25*np.sin(t)*np.sin(t)
+print(alpha)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# b = qutip.Bloch()
+# b.make_sphere()
+# b.add_vectors(shifted_bloch_set)
+# b.render()
+# plt.show()

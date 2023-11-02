@@ -16,6 +16,9 @@ def equiangular(a):
 
     print("yes equiangular")
 
+def dot(a,b):
+    return np.asarray(np.matmul(np.asmatrix(a),b))[0][0]
+
 # input: set of vectors
 def identity_resolution(a):
     mat = np.asmatrix(a)
@@ -105,11 +108,25 @@ r17_generator = np.array([[ax,-1*ay,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0],
                           [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,hx,-1*hy],
                           [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,hy,hx]])
 r17_fid = np.array([1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0])/np.sqrt(8)
-
 set = set_generator(r7_generator, r7_fid)
 
-# check that the u_i are normal vectors
+#d=3 SIC
+ome = np.exp(2*np.pi*1.j/3)
+v1 = np.array([0,1,1])
+v2 = np.array([0,ome,ome*ome])
+v3 = np.array([0,ome*ome,ome])
+v4 = np.array([1,0,ome])
+v5 = np.array([1,0,1])
+v6 = np.array([1,0,ome*ome])
+v7 = np.array([1,1,0])
+v8 = np.array([1,ome,0])
+v9 = np.array([1,ome*ome,0])
+d3sicset = [v1,v2,v3,v4,v5,v6, v7, v8, v9]
 
+equiangular(d3sicset)
+
+# check that the u_i are normal vectors
+'''
 print("magnitude of vectors:")
 for i in set:
     print("{:.4f}".format(np.matmul(i, i)))
@@ -123,3 +140,4 @@ for i in range(len(set)):
 
 # check that they resolve the identity
 print(identity_resolution(set))
+'''
