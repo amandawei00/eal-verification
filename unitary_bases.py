@@ -31,10 +31,11 @@ l6 = np.array([[0,0,0],[0,0,1],[0,1,0]])
 l7 = np.array([[0,0,0],[0,0,-1.j],[0,1.j,0]])
 l8 = np.array([[1,0,0],[0,1,0],[0,0,-2]])/np.sqrt(3)
 
-l9=l3-l8
-#h1 = 0.5*(l1+l2+l4+l5+l6+l7)
-#h2 = 0.5*(l1-l2+l4-l5+l6-l7)
-print(np.linalg.eig(-l1+l9))
+u1 = np.array([[0,-1.j,0],[0,0,-1.j],[-1.j,0,0]])
+print(l4)
+print(np.matmul(l1,l1))
+
+
 
 # gellmann = np.array([l0, l1, l2, l3, l4, l5, l6, l7, l8])
 # test_gellmann = lin_comb(np.ones(9)/3,gellmann)
