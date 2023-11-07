@@ -100,17 +100,17 @@ mT = np.asmatrix(m).getH()
 realv = [np.matmul(mT, np.matmul(bigv[i], m)) for i in range(len(bigv))]
 n = 1000000
 
-gen = realv[1]
+gen = realv[2]
 upow = gen
 #test = np.array([[a,b,0,0],[-b,a,0,0],[0,0,c,-d],[0,0,d,c]])
 #gen = test
 for i in range(1, n+1):
-    if (np.round(upow, 4) == np.identity(4)).all():
+    if (np.round(upow, 8) == np.identity(4)).all():
         print("identity found at "+str(i)+"th power")
         #print(np.round(upow,4))
     #gen = np.matmul(gen, realv[1])
-    upow=np.matmul(upow, gen)
-
+    #upow = np.matmul(upow, gen)
+    upow = np.linalg.matrix_power(gen,i)
 
 # bloch vectors --------------------------------------------------------------------------------------------------------
 
