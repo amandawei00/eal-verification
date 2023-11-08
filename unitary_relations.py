@@ -9,6 +9,10 @@ b = np.sqrt((5+np.sqrt(5))/8)
 c = -(1+np.sqrt(5))/4
 d = np.sqrt((5-np.sqrt(5))/8)
 
+# matrices for the SU(2)xSU(2) ~ SO(4) mapping
+m = np.array([[1,1.j,0,0],[0,0,1.j,1],[0,0,1.j,-1],[1,-1.j,0,0]])/np.sqrt(2)
+mT = np.asmatrix(m).getH()
+
 # pauli
 id   = np.array([[1, 0], [0, 1]])
 sigx = np.array([[0, 1], [1, 0]])
@@ -38,7 +42,7 @@ def closed_under_mult(set):
 
 def dist(vec):
     return np.sqrt(np.matmul(vec,vec))
-
+'''
 # 6 lines in R4 --------------------------------------------------------------------------------------------------------
 # unitaries:
 p = 0.5*(1+np.sqrt(5))
@@ -59,16 +63,14 @@ obloch4 = np.array([-1,0,0])
 obloch5 = np.array([0,1,0])
 obloch6 = np.array([0,1,0])
 obloch_set = [obloch1, obloch2, obloch3, obloch4, obloch5, obloch6]
+'''
+# define set of 5-cyclic matrices which generate the four equiangular lines in R4 --------------------------------------
+generator = np.array([[a, -b, 0, 0], [b, a, 0, 0], [0, 0, c, -d], [0, 0, d, c]])
+cyclic5    = [np.linalg.matrix_power(generator, i) for i in range(5)]
+su2cyclic5 = [np.matmul(m, np.matmul(cyclic5[i], mT)) for i in range(len(cyclic5))]
+print(su2cyclic5)
 
-o1_inv = np.linalg.inv(o1)
-o2_inv = np.linalg.inv(o2)
-o3_inv = np.linalg.inv(o3)
-o4_inv = np.linalg.inv(o4)
-o5_inv = np.linalg.inv(o5)
-o6_inv = np.linalg.inv(o6)
-o_invset = [o1_inv, o2_inv, o3_inv, o4_inv, o5_inv, o6_inv]
-
-# 5 lines in R4---------------------------------------------------------------------------------------------------------
+# 5 unitaries in SU(2) which rotate Bell state phi^(+) to equiangular lines --------------------------------------------
 u1 = np.array([[1.j, -1.j], [1.j, 1.j]])/np.sqrt(2)
 u2 = np.array([[d+a*1.j, b-1.j*c], [b+1.j*c, -1*d+1.j*a]])/np.sqrt(2)
 u3 = np.array([[-1*d+a*1.j, -b-1.j*c], [-b+1.j*c, d+a*1.j]])/np.sqrt(2)
@@ -89,13 +91,9 @@ u2_inv = np.array([[d-a*1.j,b-c*1.j],[b+c*1.j,-a*1.j-d]])/np.sqrt(2)
 u3_inv = np.array([[-d-a*1.j,-b-c*1.j],[-b+c*1.j,d-a*1.j]])/np.sqrt(2)
 u4_inv = np.array([[b-c*1.j,-d-a*1.j],[-d+a*1.j,-b-c*1.j]])/np.sqrt(2)
 
-# shifted bases---------------------------------------------------------------------------------------------------------
+# shift the u_i so that the first one is the identity -----------------------------------------------------------------
 v = [np.matmul(u[i], u1_inv) for i in range(len(u))]
-bigv = [np.kron(v[i], np.array([[1,0],[0,1]])) for i in range(len(v))]
-
-# making the SU(2)xSU(2) --> SO(4) mapping
-m = np.array([[1,1.j,0,0],[0,0,1.j,1],[0,0,1.j,-1],[1,-1.j,0,0]])/np.sqrt(2)
-mT = np.asmatrix(m).getH()
+bigv = [np.kron(v[i], np.array([[1, 0], [0, 1]])) for i in range(len(v))]
 
 realv = [np.matmul(mT, np.matmul(bigv[i], m)) for i in range(len(bigv))]
 n = 1000000
@@ -130,7 +128,7 @@ transpose_bloch4 = np.array([b-d, a-c, b+d])*(2/np.sqrt(15))
 transpose_bloch5 = np.array([d-b, a-c, -b-d])*(2/np.sqrt(15))
 
 transpose_bloch_set = [transpose_bloch1, transpose_bloch2, transpose_bloch3, transpose_bloch4, transpose_bloch5]
-
+'''
 # qutrit-10 states -----------------------------------------------------------------------------------------------------
 t = np.arccos(-1/13)
 trit0 = np.array([[1,0,0],[0,1,0],[0,0,1]])
@@ -157,7 +155,7 @@ trit9 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*(np.sqrt(1/21)-np.sqrt(1/3)), n
                   [np.sin(t)*(3/4)*(np.sqrt(1/15)*1.j-np.sqrt(1/10)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j-np.sqrt(1/3)), np.cos(t)+1.j*np.sin(t)*(3/4)*2/np.sqrt(3)]])
 
 alpha = 3*np.cos(t)*np.cos(t)-0.25*np.sin(t)*np.sin(t)
-
+'''
 #-----------------------------------------------------------------------------------------------------------------------
 '''b = qutip.Bloch()
 b.make_sphere()
