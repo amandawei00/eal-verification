@@ -1,5 +1,6 @@
 import numpy as np
 from qutip import *
+from scipy import linalg
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -67,8 +68,7 @@ obloch_set = [obloch1, obloch2, obloch3, obloch4, obloch5, obloch6]
 # define set of 5-cyclic matrices which generate the four equiangular lines in R4 --------------------------------------
 generator = np.array([[a, -b, 0, 0], [b, a, 0, 0], [0, 0, c, -d], [0, 0, d, c]])
 cyclic5    = [np.linalg.matrix_power(generator, i) for i in range(5)]
-su2cyclic5 = [np.matmul(m, np.matmul(cyclic5[i], mT)) for i in range(len(cyclic5))]
-print(su2cyclic5)
+su2cyclic5 = [np.matmul(m, np.matmul(cyclic5[i], mT)) for i in range(len(cyclic5))] # this is indeed cyclic
 
 # 5 unitaries in SU(2) which rotate Bell state phi^(+) to equiangular lines --------------------------------------------
 u1 = np.array([[1.j, -1.j], [1.j, 1.j]])/np.sqrt(2)
@@ -94,14 +94,13 @@ u4_inv = np.array([[b-c*1.j,-d-a*1.j],[-d+a*1.j,-b-c*1.j]])/np.sqrt(2)
 # shift the u_i so that the first one is the identity -----------------------------------------------------------------
 v = [np.matmul(u[i], u1_inv) for i in range(len(u))]
 bigv = [np.kron(v[i], np.array([[1, 0], [0, 1]])) for i in range(len(v))]
-
 realv = [np.matmul(mT, np.matmul(bigv[i], m)) for i in range(len(bigv))]
+print(np.linalg.eig(realv[4]))
+
 n = 1000000
 
 gen = realv[2]
 upow = gen
-#test = np.array([[a,b,0,0],[-b,a,0,0],[0,0,c,-d],[0,0,d,c]])
-#gen = test
 for i in range(1, n+1):
     if (np.round(upow, 8) == np.identity(4)).all():
         print("identity found at "+str(i)+"th power")
