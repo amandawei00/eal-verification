@@ -1,8 +1,5 @@
 import numpy as np
-from qutip import *
-from scipy import linalg
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 # 5th roots of unity values
 a = (-1+np.sqrt(5))/4
@@ -87,16 +84,24 @@ bloch5 = np.array([d,a,-b])/np.sqrt(b*b+a*a+d*d)
 bloch_set = [bloch1, bloch2, bloch3, bloch4, bloch5]
 
 u1_inv = np.array([[-1.j, -1.j], [1.j, -1.j]])/np.sqrt(2)
+'''
 u2_inv = np.array([[d-a*1.j,b-c*1.j],[b+c*1.j,-a*1.j-d]])/np.sqrt(2)
 u3_inv = np.array([[-d-a*1.j,-b-c*1.j],[-b+c*1.j,d-a*1.j]])/np.sqrt(2)
 u4_inv = np.array([[b-c*1.j,-d-a*1.j],[-d+a*1.j,-b-c*1.j]])/np.sqrt(2)
-
+'''
 # shift the u_i so that the first one is the identity -----------------------------------------------------------------
 v = [np.matmul(u[i], u1_inv) for i in range(len(u))]
 bigv = [np.kron(v[i], np.array([[1, 0], [0, 1]])) for i in range(len(v))]
 realv = [np.matmul(mT, np.matmul(bigv[i], m)) for i in range(len(bigv))]
-print(np.linalg.eig(realv[4]))
+evecs = np.transpose(np.linalg.eig(v[2]).eigenvectors)
 
+evec1 = np.linalg.eig(v[0]).eigenvectors
+evec2 = np.linalg.eig(v[1]).eigenvectors
+evec3 = np.linalg.eig(v[2]).eigenvectors
+evec4 = np.linalg.eig(v[3]).eigenvectors
+evec5 = np.linalg.eig(v[4]).eigenvectors
+
+''' # check that the states do not form a group
 n = 1000000
 
 gen = realv[2]
@@ -107,7 +112,7 @@ for i in range(1, n+1):
         #print(np.round(upow,4))
     #gen = np.matmul(gen, realv[1])
     #upow = np.matmul(upow, gen)
-    upow = np.linalg.matrix_power(gen,i)
+    upow = np.linalg.matrix_power(gen,i)'''
 
 # bloch vectors --------------------------------------------------------------------------------------------------------
 
@@ -127,34 +132,7 @@ transpose_bloch4 = np.array([b-d, a-c, b+d])*(2/np.sqrt(15))
 transpose_bloch5 = np.array([d-b, a-c, -b-d])*(2/np.sqrt(15))
 
 transpose_bloch_set = [transpose_bloch1, transpose_bloch2, transpose_bloch3, transpose_bloch4, transpose_bloch5]
-'''
-# qutrit-10 states -----------------------------------------------------------------------------------------------------
-t = np.arccos(-1/13)
-trit0 = np.array([[1,0,0],[0,1,0],[0,0,1]])
-trit1= np.array([[np.cos(t),-1.j*np.sin(t),0],[-1.j*np.sin(t),np.cos(t),0],[0,0,np.cos(t)]])
-trit2 = np.array([[np.cos(t), np.sin(t)*(3/4)*(1.j*(1/6)-np.sqrt(7/4)),0],[np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(7/4)), np.cos(t) ,0],[0, 0, np.cos(t)]])
-trit3 = np.array([[np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(12/7), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)),0],[np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)),np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(12/7),0],[0,0,np.cos(t)]])
-trit4 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), -1.j*np.sin(t)*(3/4)*np.sqrt(5/3)],
-                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(1/21), 0],
-                  [-1.j*np.sin(t)*(3/4)*np.sqrt(5/3),0,np.cos(t)]])
-trit5 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)-2*np.sqrt(2/5))],
-                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(1/21), 0],
-                  [1.j*np.sin(t)*(3/4)*(np.sqrt(1/15)-2*np.sqrt(2/5)*1.j), 0, np.cos(t)]])
-trit6 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)+np.sqrt(1/10))],
-                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(1/21), -1.j*np.sin(t)*(3/4)*np.sqrt(3/2)],
-                  [1.j*np.sin(t)*(3/4)*(np.sqrt(1/15)+1.j*np.sqrt(1/10)), -1.j*np.sin(t)*(3/4)*np.sqrt(3/2), np.cos(t)]])
-trit7 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)+np.sqrt(1/10))],
-                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)-1.j*np.sin(t)*(3/4)*np.sqrt(1/21), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j-2*np.sqrt(1/3))],
-                  [np.sin(t)*(3/4)*(np.sqrt(1/15)*1.j-np.sqrt(1/10)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j+2*np.sqrt(1/3)), np.cos(t)]])
-trit8 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*(np.sqrt(1/21)+np.sqrt(1/3)), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)+np.sqrt(1/10))],
-                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)+1.j*np.sin(t)*(3/4)*(-np.sqrt(1/21)+np.sqrt(1/3)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j+np.sqrt(1/3))],
-                  [np.sin(t)*(3/4)*(np.sqrt(1/15)*1.j-np.sqrt(1/10)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j-np.sqrt(1/3)), np.cos(t)-1.j*np.sin(t)*(3/4)*2/np.sqrt(3)]])
-trit9 = np.array([[np.cos(t)+1.j*np.sin(t)*(3/4)*(np.sqrt(1/21)-np.sqrt(1/3)), np.sin(t)*(3/4)*((1/6)*1.j+np.sqrt(1/28)), np.sin(t)*(3/4)*(1.j*np.sqrt(1/15)+np.sqrt(1/10))],
-                  [np.sin(t)*(3/4)*((1/6)*1.j-np.sqrt(1/28)), np.cos(t)+1.j*np.sin(t)*(3/4)*(-np.sqrt(1/21)-np.sqrt(1/3)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j+np.sqrt(1/3))],
-                  [np.sin(t)*(3/4)*(np.sqrt(1/15)*1.j-np.sqrt(1/10)), np.sin(t)*(3/4)*(np.sqrt(1/6)*1.j-np.sqrt(1/3)), np.cos(t)+1.j*np.sin(t)*(3/4)*2/np.sqrt(3)]])
 
-alpha = 3*np.cos(t)*np.cos(t)-0.25*np.sin(t)*np.sin(t)
-'''
 #-----------------------------------------------------------------------------------------------------------------------
 '''b = qutip.Bloch()
 b.make_sphere()
