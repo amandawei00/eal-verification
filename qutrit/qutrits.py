@@ -8,6 +8,8 @@ rho2 = 4/10
 alp = np.sqrt(alp2)
 rho = np.sqrt(rho2)
 
+ref_mat = np.array([[rho2, alp2, alp2],[alp2, rho2, alp2],[alp2, alp2, rho2]])
+
 def gen_m(r):
     # r: [(0)b, (1)c, (2)qab, (3)rab, (4)sab, (5)tab, (6)uab, (7)vab, (8)wab]
     # b and c \in {0,1} are sign choices for beta and gamma
@@ -21,6 +23,7 @@ def gen_m(r):
                      [alp*np.exp(1.j*sab), rho*np.exp(1.j*tab), np.power(-1, cab)*alp*np.exp(1.j*uab)],
                      [np.power(-1, bab)*alp*np.exp(1.j*vab), np.power(-1,cab)*alp*np.exp(1.j*wab), rho*np.exp(1.j*xab)]])
 
+
 def is_consistent(r1, r2):
     # r1: M1 -> 2
     # r2: M1 -> 3
@@ -31,11 +34,9 @@ def is_consistent(r1, r2):
     for i in range(len(m)):
         for j in range(len(m[0])):
             if i == j:
-                if np.round(np.power(np.abs(m[i][j]), 2),6) == np.round(rho2,6):
-                    diff[i][j] = True
+                diff[i][j] = np.round(np.power(np.abs(m[i][j]), 2),6)
             else:
-                if np.round(np.power(np.abs(m[i][j]), 2),6) == np.round(rho2,6):
-                    diff[i][j] = True
+                diff[i][j] = np.round(np.power(np.abs(m[i][j]), 2),6)
     return diff
 
 # search for solutions first assuming parity is zero
@@ -43,11 +44,19 @@ b = 0
 c = 0
 
 # generate random r vectors
-for i in range(100):
+for i in range(1000):
     r1 = np.concatenate(([b,c], np.random.rand(7)))
     r2 = np.concatenate(([b,c], np.random.rand(7)))
+    #r3 = np.concatenate(([b, c], np.random.rand(7)))
+    #r4 = np.concatenate(([b, c], np.random.rand(7)))
+    #r5 = np.concatenate(([b, c], np.random.rand(7)))
+    #r6 = np.concatenate(([b, c], np.random.rand(7)))
+    #r7 = np.concatenate(([b, c], np.random.rand(7)))
+    #r8 = np.concatenate(([b, c], np.random.rand(7)))
+    #r9 = np.concatenate(([b, c], np.random.rand(7))
+
     #print(is_consistent(r1,r2))
-    if (is_consistent(r1, r2) == np.zeros((3, 3))).all():
+    if (is_consistent(r1, r2) == ref_mat).all():
         print("solution " + str(i) + "------------------------------------")
         print(r1)
         print(r2)
